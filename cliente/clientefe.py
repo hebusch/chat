@@ -2,6 +2,7 @@ import sys
 import PyQt5
 import PyQt5.sip
 import time
+import os
 from PyQt5 import uic
 import PyQt5.QtCore
 import PyQt5.QtWidgets
@@ -27,7 +28,8 @@ class Clientefe(Ui_MainWindow):
         self.x = 5
         self.y = 10
         self.player = PyQt5.QtMultimedia.QMediaPlayer()
-        self.sound = PyQt5.QtMultimedia.QMediaContent(PyQt5.QtCore.QUrl.fromLocalFile('sound.wav'))
+        sound_path = os.path.join('sound.wav')
+        self.sound = PyQt5.QtMultimedia.QMediaContent(PyQt5.QtCore.QUrl.fromLocalFile(sound_path))
         self.player.setMedia(self.sound)
         self.player.setVolume(20)
         self.generar_conexion_signal = None
@@ -81,13 +83,13 @@ class Clientefe(Ui_MainWindow):
 
     def label_coneccion(self):
         self.label_emergencia.setText(
-            "<html><head/><body><span style=' font-size:10pt; color:#ffffff;'><p align='center'>CONECTANDO...</br></span></p></body></html>")
+            "<html><head/><body><span style=' font-size:10pt; color:#40FF00;'><p align='center'>CONECTANDO...</br></span></p></body></html>")
         self.label_emergencia.resize(self.label_emergencia.sizeHint())
         self.timer = PyQt5.QtCore.QTimer()
         self.timer.timeout.connect(self.generar_conexion)
         self.timer.setSingleShot(True)
         self.timer.start(1000)
-    
+
     def generar_conexion(self):
         self.generar_conexion_signal.emit(self.ip_introducido, self.port_introducido)
 
@@ -109,7 +111,7 @@ class Clientefe(Ui_MainWindow):
 
         elif estado == False:
             self.label_emergencia.setText(
-                "<html><head/><body><span style=' font-size:10pt; color:#ffffff;'><p align='center'>CONEXION FALLIDA!</br></span></p></body></html>")
+                "<html><head/><body><span style=' font-size:10pt; color:#FF0000;'><p align='center'>CONEXION FALLIDA!</br></span></p></body></html>")
             self.label_emergencia.resize(self.label_emergencia.sizeHint())
             self.timer = PyQt5.QtCore.QTimer()
             self.timer.timeout.connect(self.actualizar_emergencia)

@@ -42,7 +42,7 @@ class Cliente(PyQt5.QtCore.QObject):
         try:
             self.server_cliente.send(mensaje_encriptado)
         except:
-            error_mnsj = 'CLIENTE: [SE HA PERDIDO LA CONEXION CON EL HOST]'
+            error_mnsj = "<span style='color:#40FF00'>CLIENTE: [SE HA PERDIDO LA CONEXION CON EL HOST]"
             self.mensaje_enviado_signal.emit(error_mnsj)
 
     def recibir_mensaje(self, server):

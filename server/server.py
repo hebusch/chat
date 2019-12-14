@@ -22,11 +22,11 @@ class Servidor:
 
         while True:
             conn, addr = self.servidor.accept()
-            conn.send("\nBienvenidos al Chat Cifrado!\n".encode('utf-8'))
+            conn.send("\n<span style='color:#40FF00'>Bienvenidos al Chat Cifrado!\n".encode('utf-8'))
             self.clientes.append(conn)
             self.addrs.append(addr[1])
             print(f"<Se ha Conectado el usuario {addr[1]}>\n")
-            self.enviar_mensajes(f"SERVER: [Se ha Conectado el usuario {addr[1]}]\n".encode('utf-8'), conn)
+            self.enviar_mensajes(f"<span style='color:#40FF00'>SERVER: [Se ha Conectado el usuario {addr[1]}]\n".encode('utf-8'), conn)
             threading._start_new_thread(self.clientthread, (conn,addr))
     
     def clientthread(self, conn, addr):
@@ -35,8 +35,8 @@ class Servidor:
                 mensaje = conn.recv(4096)
                 if mensaje:
                     print(f"[Mensaje de {addr[1]} a las {time.strftime('%H:%M:%S')}]: {mensaje.decode()}")
-                    mensaje_enviar = f"[{addr[1]},{time.strftime('%H:%M:%S')}]: {mensaje.decode()}"
-                    mensaje_personal = f"[TU,{time.strftime('%H:%M:%S')}]: {mensaje.decode()}"
+                    mensaje_enviar = f"[{addr[1]}]: {mensaje.decode()}"
+                    mensaje_personal = f"[TU]: {mensaje.decode()}"
                     conn.sendall(mensaje_personal.encode())
                     self.enviar_mensajes(mensaje_enviar.encode(), conn)
                     
