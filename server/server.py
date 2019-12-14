@@ -52,7 +52,6 @@ class Servidor:
                     cliente.send(mensaje)
                 except:
                     cliente.close()
-                    indice = self.clientes.index(conn)
                     self.clientes.remove(cliente)
                 
 

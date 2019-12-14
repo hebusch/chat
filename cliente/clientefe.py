@@ -5,6 +5,7 @@ import time
 from PyQt5 import uic
 import PyQt5.QtCore
 import PyQt5.QtWidgets
+import PyQt5.QtMultimedia
 from ventana import Ui_MainWindow
 
 class Clientefe(Ui_MainWindow):
@@ -25,6 +26,10 @@ class Clientefe(Ui_MainWindow):
         self.estado_FE = 1
         self.x = 5
         self.y = 10
+        self.player = PyQt5.QtMultimedia.QMediaPlayer()
+        self.sound = PyQt5.QtMultimedia.QMediaContent(PyQt5.QtCore.QUrl.fromLocalFile('sound.wav'))
+        self.player.setMedia(self.sound)
+        self.player.setVolume(20)
         self.generar_conexion_signal = None
         self.mensaje_enviado_signal = None
         self.lista_labels = []
@@ -116,6 +121,7 @@ class Clientefe(Ui_MainWindow):
         self.label = PyQt5.QtWidgets.QLabel(self.mensaje_a_mostrar, self)
         self.label.setGeometry(self.x, self.y, 0, 0)
         self.label.resize(self.label.sizeHint())
+        self.player.play()
         self.label.show()
         self.lista_labels.append(self.label)
         self.y += 15
