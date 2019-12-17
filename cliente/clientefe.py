@@ -1,7 +1,3 @@
-import sys
-import PyQt5
-import time
-import os
 import paths
 import PyQt5.QtCore
 import PyQt5.QtWidgets

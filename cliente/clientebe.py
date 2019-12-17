@@ -1,7 +1,5 @@
 import socket
-import PyQt5
 import threading
-import sys
 import PyQt5.QtCore
 
 class Cliente(PyQt5.QtCore.QObject):
