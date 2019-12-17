@@ -1,14 +1,15 @@
 import socket
 import threading
 import time
-import json 
+import json
+import urllib
 
 class Servidor:
 
-    def __init__(self, host, port):
-
+    def __init__(self, host):
+        
         self.host = host
-        self.port = port
+        self.port = 2001 # DEJARE PORT 2001 ESTATICO PARA SIEMPRE
         self.servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
         self.servidor.bind((self.host, self.port))
@@ -60,13 +61,18 @@ class Servidor:
             self.clientes.remove(conn)
 
 if __name__ == '__main__':
+    import requests
 
     with open('parametros.json') as fil:
         datos = json.load(fil)
         host = datos[0]['IP_ADDRESS']
-        port = datos[0]['PORT']
         fil.close()
     
-    print(f' IP:{host}, PORT:{port}')
-    server = Servidor(host, port)
+    if host == '0.0.0.0':
+        external_ip = requests.get('https://api.ipify.org').text
+        print(f' IP:{external_ip}, PORT: 2001')
+    else:
+        print(f'IP:{host}, PORT: 2001')
+
+    server = Servidor(host)
     server

@@ -69,7 +69,15 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 442, 21))
         MainWindow.setMenuBar(self.menubar)
-
+        '''
+        ELEMENTOS QUE APARECEN EN 2da INSTANCIA LOS ESCONDEMOS
+        '''
+        self.boton_enviar.hide()
+        self.line_mensaje.hide()
+        self.label_gris.hide()
+        '''
+        -----------------------------------------
+        '''
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 

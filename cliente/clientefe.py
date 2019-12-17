@@ -4,6 +4,7 @@ import PyQt5.QtWidgets
 import PyQt5.QtMultimedia
 from ventana import Ui_MainWindow
 
+
 class Clientefe(Ui_MainWindow):
     estado_conexion_signal = PyQt5.QtCore.pyqtSignal(bool)
     mensaje_recibido_signal = PyQt5.QtCore.pyqtSignal(str)
@@ -15,15 +16,12 @@ class Clientefe(Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.boton_enviar.hide()
-        self.line_mensaje.hide()
-        self.label_gris.hide()
-        self.label_fondo.show()
         self.estado_FE = 1
         self.x = 5
         self.y = 10
         self.player = PyQt5.QtMultimedia.QMediaPlayer()
-        self.sound = PyQt5.QtMultimedia.QMediaContent(PyQt5.QtCore.QUrl.fromLocalFile(paths.sound_path))
+        self.sound = PyQt5.QtMultimedia.QMediaContent(
+            PyQt5.QtCore.QUrl.fromLocalFile(paths.sound_path))
         self.player.setMedia(self.sound)
         self.player.setVolume(20)
         self.generar_conexion_signal = None
@@ -51,7 +49,7 @@ class Clientefe(Ui_MainWindow):
         self.ip_introducido = self.line_ip.displayText()
         self.port_introducido = self.line_port.displayText()
 
-        if self.ip_introducido.replace('.','').isdigit():
+        if self.ip_introducido.replace('.', '').isdigit():
             try:
                 self.port_introducido = int(self.port_introducido)
                 self.label_coneccion()
@@ -85,7 +83,8 @@ class Clientefe(Ui_MainWindow):
         self.timer.start(1000)
 
     def generar_conexion(self):
-        self.generar_conexion_signal.emit(self.ip_introducido, self.port_introducido)
+        self.generar_conexion_signal.emit(
+            self.ip_introducido, self.port_introducido)
 
     def estado_conexion(self, estado):
         if estado == True:
@@ -97,7 +96,8 @@ class Clientefe(Ui_MainWindow):
             self.labelAutor.hide()
             self.labelTitulo.hide()
             self.label_emergencia.hide()
-            self.setWindowTitle(f'Chat Cifrado | IP: {self.ip_introducido} PORT: {self.port_introducido}')
+            self.setWindowTitle(
+                f'Chat Cifrado | CONECTADO EN {self.ip_introducido}')
             self.line_mensaje.show()
             self.boton_enviar.show()
             self.label_gris.show()
