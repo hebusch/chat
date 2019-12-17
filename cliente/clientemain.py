@@ -1,5 +1,6 @@
 import PyQt5.QtWidgets
 import PyQt5
+import PyQt5.sip
 import clientefe
 import clientebe
 

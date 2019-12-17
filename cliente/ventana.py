@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+import paths
 
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
@@ -8,13 +9,13 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         MainWindow.setMinimumSize(QtCore.QSize(442, 463))
         MainWindow.setMaximumSize(QtCore.QSize(442, 463))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("chat-17.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(paths.icon_path), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.label_fondo = QtWidgets.QLabel(self.centralwidget)
         self.label_fondo.setGeometry(QtCore.QRect(-10, -10, 521, 491))
         self.label_fondo.setText("")
-        self.label_fondo.setPixmap(QtGui.QPixmap("fondo negro.jpg"))
+        self.label_fondo.setPixmap(QtGui.QPixmap(paths.fondo_path))
         self.label_fondo.setScaledContents(True)
         self.labelTitulo = QtWidgets.QLabel(self.centralwidget)
         self.labelTitulo.setGeometry(QtCore.QRect(130, 90, 181, 71))
@@ -55,7 +56,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.label_gris = QtWidgets.QLabel(self.centralwidget)
         self.label_gris.setGeometry(QtCore.QRect(-10, 410, 471, 91))
         self.label_gris.setText("")
-        self.label_gris.setPixmap(QtGui.QPixmap("gris.jpg"))
+        self.label_gris.setPixmap(QtGui.QPixmap(paths.label_gris_path))
         self.label_fondo.raise_()
         self.label_gris.raise_()
         self.labelTitulo.raise_()

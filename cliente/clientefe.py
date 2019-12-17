@@ -1,9 +1,8 @@
 import sys
 import PyQt5
-import PyQt5.sip
 import time
 import os
-from PyQt5 import uic
+import paths
 import PyQt5.QtCore
 import PyQt5.QtWidgets
 import PyQt5.QtMultimedia
@@ -28,8 +27,7 @@ class Clientefe(Ui_MainWindow):
         self.x = 5
         self.y = 10
         self.player = PyQt5.QtMultimedia.QMediaPlayer()
-        sound_path = os.path.join('sound.wav')
-        self.sound = PyQt5.QtMultimedia.QMediaContent(PyQt5.QtCore.QUrl.fromLocalFile(sound_path))
+        self.sound = PyQt5.QtMultimedia.QMediaContent(PyQt5.QtCore.QUrl.fromLocalFile(paths.sound_path))
         self.player.setMedia(self.sound)
         self.player.setVolume(20)
         self.generar_conexion_signal = None
