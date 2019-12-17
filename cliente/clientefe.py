@@ -120,7 +120,7 @@ class Clientefe(Ui_MainWindow):
         self.player.play()
         self.label.show()
         self.lista_labels.append(self.label)
-        self.y += 15
+        self.y += 20
         self.actualizar_labels()
 
     def enviar_mensaje(self):
@@ -129,15 +129,15 @@ class Clientefe(Ui_MainWindow):
         self.mensaje_enviado_signal.emit(mensaje)
 
     def actualizar_labels(self):
-        if self.largo(self.lista_labels) > 23:
+        if self.largo(self.lista_labels) > 19:
             primer_label = self.lista_labels.pop(0)
             primer_label.hide()
             for label in self.lista_labels:
-                for i in range(15):
+                for i in range(20):
                     x = label.pos().x()
                     y = label.pos().y()
                     label.move(x, y - 1)
-            self.y -= 15
+            self.y -= 20
         else:
             pass
 
