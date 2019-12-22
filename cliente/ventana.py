@@ -53,8 +53,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.horizontalLayout_3.addWidget(self.line_mensaje)
         self.boton_enviar = QtWidgets.QPushButton(self.horizontalLayoutWidget_3)
         self.horizontalLayout_3.addWidget(self.boton_enviar)
+        self.label_gris_qrect = QtCore.QRect(-10, 410, 471, 91)
         self.label_gris = QtWidgets.QLabel(self.centralwidget)
-        self.label_gris.setGeometry(QtCore.QRect(-10, 410, 471, 91))
+        self.label_gris.setGeometry(self.label_gris_qrect)
         self.label_gris.setText("")
         self.label_gris.setPixmap(QtGui.QPixmap(paths.label_gris_path))
         self.label_fondo.raise_()
@@ -75,6 +76,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.boton_enviar.hide()
         self.line_mensaje.hide()
         self.label_gris.hide()
+        self.line_port.hide()
+        self.label_port.hide()
         '''
         -----------------------------------------
         '''

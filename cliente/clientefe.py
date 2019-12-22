@@ -2,6 +2,7 @@ import paths
 import PyQt5.QtCore
 import PyQt5.QtWidgets
 import PyQt5.QtMultimedia
+from PIL import ImageFont
 from ventana import Ui_MainWindow
 
 
@@ -23,7 +24,7 @@ class Clientefe(Ui_MainWindow):
         self.sound = PyQt5.QtMultimedia.QMediaContent(
             PyQt5.QtCore.QUrl.fromLocalFile(paths.sound_path))
         self.player.setMedia(self.sound)
-        self.player.setVolume(20)
+        self.player.setVolume(30)
         self.generar_conexion_signal = None
         self.mensaje_enviado_signal = None
         self.lista_labels = []
@@ -47,23 +48,12 @@ class Clientefe(Ui_MainWindow):
 
     def presionar_boton(self):
         self.ip_introducido = self.line_ip.displayText()
-        self.port_introducido = self.line_port.displayText()
 
         if self.ip_introducido.replace('.', '').isdigit():
-            try:
-                self.port_introducido = int(self.port_introducido)
-                self.label_coneccion()
-            except:
-                self.label_emergencia.setText(
-                    f"<html><head/><body><span style=' font-size:10pt; color:#ffffff;'><p align='center'>Ingrese un IP y PORT valido! </br></span></p></body></html>")
-                self.label_emergencia.resize(self.label_emergencia.sizeHint())
-                self.timer = PyQt5.QtCore.QTimer()
-                self.timer.timeout.connect(self.actualizar_emergencia)
-                self.timer.setSingleShot(True)
-                self.timer.start(1500)
+            self.label_coneccion()
         else:
             self.label_emergencia.setText(
-                f"<html><head/><body><span style=' font-size:10pt; color:#ffffff;'><p align='center'>Ingrese un IP y PORT valido! </br></span></p></body></html>")
+                f"<html><head/><body><span style=' font-size:10pt; color:#ffffff;'><p align='center'>Ingrese un IP valido! </br></span></p></body></html>")
             self.label_emergencia.resize(self.label_emergencia.sizeHint())
             self.timer = PyQt5.QtCore.QTimer()
             self.timer.timeout.connect(self.actualizar_emergencia)
@@ -78,21 +68,19 @@ class Clientefe(Ui_MainWindow):
             "<html><head/><body><span style=' font-size:10pt; color:#40FF00;'><p align='center'>CONECTANDO...</br></span></p></body></html>")
         self.label_emergencia.resize(self.label_emergencia.sizeHint())
         self.timer = PyQt5.QtCore.QTimer()
-        self.timer.timeout.connect(self.generar_conexion)
+        self.t imer.timeout.connect(self.generar_conexion)
         self.timer.setSingleShot(True)
         self.timer.start(1000)
 
     def generar_conexion(self):
         self.generar_conexion_signal.emit(
-            self.ip_introducido, self.port_introducido)
+            self.ip_introducido)
 
     def estado_conexion(self, estado):
         if estado == True:
             self.boton_conectar.hide()
-            self.label_ip.hide()
             self.line_ip.hide()
-            self.label_port.hide()
-            self.line_port.hide()
+            self.label_ip.hide()
             self.labelAutor.hide()
             self.labelTitulo.hide()
             self.label_emergencia.hide()
@@ -117,10 +105,12 @@ class Clientefe(Ui_MainWindow):
         self.label = PyQt5.QtWidgets.QLabel(self.mensaje_a_mostrar, self)
         self.label.setGeometry(self.x, self.y, 0, 0)
         self.label.resize(self.label.sizeHint())
+        if self.label.width() >= 420:
+            pass 
         self.player.play()
         self.label.show()
         self.lista_labels.append(self.label)
-        self.y += 20
+        self.y += self.label.height()
         self.actualizar_labels()
 
     def enviar_mensaje(self):
@@ -129,20 +119,22 @@ class Clientefe(Ui_MainWindow):
         self.mensaje_enviado_signal.emit(mensaje)
 
     def actualizar_labels(self):
-        if self.largo(self.lista_labels) > 19:
-            primer_label = self.lista_labels.pop(0)
-            primer_label.hide()
+        y_max = self.label_gris_qrect.y() - 20
+        y_min = 5
+        ultimo_label = self.lista_labels[-1]
+        if ultimo_label.pos().y() + ultimo_label.height() > y_max:
+            a_subir = ultimo_label.pos().y() + ultimo_label.height() - y_max
             for label in self.lista_labels:
-                for i in range(20):
-                    x = label.pos().x()
-                    y = label.pos().y()
-                    label.move(x, y - 1)
-            self.y -= 20
-        else:
+                for i in range(a_subir):
+                    label.move(
+                        label.pos().x(), label.pos().y() - 1
+                    )
+            primer_label = self.lista_labels[0]
+            if primer_label.pos().y() < y_min:
+                self.lista_labels.remove(primer_label)
+                primer_label.hide() 
+        else:  
             pass
-
-    def largo(self, lista):
-        i = 0
-        for elem in lista:
-            i += 1
-        return i
+    
+    def cortar_label(self, mensaje):
+        pass 

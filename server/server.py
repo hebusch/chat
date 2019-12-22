@@ -24,7 +24,7 @@ class Servidor:
         while True:
             conn, addr = self.servidor.accept()
             conn.send(
-                "\n<span style='color:#40FF00'>Bienvenidos al Chat Cifrado!\n".encode('utf-8'))
+                "\n<span style='color:#40FF00;font-style:italic'>Bienvenidos al Chat Cifrado!\n".encode('utf-8'))
             self.clientes.append(conn)
             self.addrs.append(addr[1])
             print(f"<Se ha Conectado el usuario {addr[1]}>\n")
@@ -66,13 +66,16 @@ class Servidor:
 if __name__ == '__main__':
     import requests
 
-    with open('parametros.json') as fil:
+    with open('parametros.json', 'r') as fil:
         datos = json.load(fil)
         host = datos[0]['IP_ADDRESS']
         fil.close()
 
     if host == '0.0.0.0':
-        external_ip = requests.get('https://api.ipify.org').text
+        try:
+            external_ip = requests.get('https://api.ipify.org').text
+        except:
+            external_ip = 'Nan'
         print(f' IP:{external_ip}, PORT: 2001')
     else:
         print(f'IP:{host}, PORT: 2001')

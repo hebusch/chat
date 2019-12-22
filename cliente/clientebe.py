@@ -4,7 +4,7 @@ import PyQt5.QtCore
 
 class Cliente(PyQt5.QtCore.QObject):
 
-    generar_conexion_signal = PyQt5.QtCore.pyqtSignal(str, int)
+    generar_conexion_signal = PyQt5.QtCore.pyqtSignal(str)
     mensaje_recibido_signal = PyQt5.QtCore.pyqtSignal(str)
 
     def __init__(self):
@@ -12,15 +12,14 @@ class Cliente(PyQt5.QtCore.QObject):
         self.estado_conexion_signal = None
         self.mensaje_enviado_signal = None
         self.init_signals()
-
     
     def init_signals(self):
         self.generar_conexion_signal.connect(self.intentar_conexion)
         self.mensaje_recibido_signal.connect(self.enviar_mensaje)
 
-    def intentar_conexion(self, host, port):
+    def intentar_conexion(self, host):
         self.host = host
-        self.port = port
+        self.port = 2001 #PORT  ESTATICO 2001
 
         self.server_cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
