@@ -29,6 +29,7 @@ class Clientefe(Ui_MainWindow):
         self.generar_conexion_signal = None
         self.mensaje_enviado_signal = None
         self.nickname_enviar_signal = None
+        self.desconectar_signal = None
         self.lista_labels = []
         self.init_signals()
 
@@ -89,7 +90,11 @@ class Clientefe(Ui_MainWindow):
         self.timer = PyQt5.QtCore.QTimer()
         self.timer.timeout.connect(self.generar_conexion)
         self.timer.setSingleShot(True)
-        self.timer.start(1000)
+        self.timer.start(500)
+        self.timer2 = PyQt5.QtCore.QTimer()
+        self.timer2.timeout.connect(self.actualizar_emergencia)
+        self.timer2.setSingleShot(True)
+        self.timer2.start(500)
 
     def generar_conexion(self):
         self.nickname_enviar_signal.emit(
@@ -125,27 +130,50 @@ class Clientefe(Ui_MainWindow):
             self.timer.setSingleShot(True)
             self.timer.start(1000)
 
-    def recibir_mensaje(self, mensaje, prop=False):
-        mensaje_a_mostrar = f"<html><head/><body><span style=' font-size:10pt; color:#ffffff;'>{mensaje}</br></span></body></html>"
-        if '[TU]:' in mensaje[:5]:
-            mensaje_a_mostrar = f"<html><head/><body><span style=' font-size:10pt; color:#BDBDBD;'>{mensaje}</br></span></body></html>"
-        label = PyQt5.QtWidgets.QLabel(mensaje_a_mostrar, self)
-        label.setGeometry(self.x, self.y, 0, 0)
-        label.setFixedWidth(430)
-        label.resize(label.sizeHint())
-        if label.width() >= 430:
-            label.setWordWrap(True)
+    def recibir_mensaje(self, mensaje):
+        if self.estado_FE == 2:
+            mensaje_a_mostrar = f"<html><head/><body><span style=' font-size:10pt; color:#ffffff;'>{mensaje}</br></span></body></html>"
+            if '[TU]:' in mensaje[:5]:
+                mensaje_a_mostrar = f"<html><head/><body><span style=' font-size:10pt; color:#BDBDBD;'>{mensaje}</br></span></body></html>"
+            label = PyQt5.QtWidgets.QLabel(mensaje_a_mostrar, self)
+            label.setGeometry(self.x, self.y, 0, 0)
+            label.setFixedWidth(430)
             label.resize(label.sizeHint())
-        self.player.play()
-        label.show()
-        self.lista_labels.append(label)
-        self.y += label.height()
-        self.actualizar_labels()
+            if label.width() >= 430:
+                label.setWordWrap(True)
+                label.resize(label.sizeHint())
+            self.player.play()
+            label.show()
+            self.lista_labels.append(label)
+            self.y += label.height()
+            self.actualizar_labels()
 
     def enviar_mensaje(self):
         mensaje = self.line_mensaje.displayText()
         self.line_mensaje.clear()
-        self.mensaje_enviado_signal.emit(mensaje)
+        self.mensaje_enviado_signal.emit(
+            mensaje
+        )
+        if mensaje == '/desconectar':
+            self.y = 10
+            self.line_mensaje.hide()
+            self.boton_enviar.hide()
+            self.label_gris.hide()
+            self.setWindowTitle('Chat Cifrado')
+            self.labelTitulo.show()
+            self.label_emergencia.show()
+            self.label_emergencia.setText('')
+            self.label_ip.show()
+            self.line_ip.show()
+            self.line_ip.clear()
+            self.label_nick.show()
+            self.line_nick.show()
+            self.line_nick.setText('Anónimo')
+            self.labelAutor.show()
+            self.boton_conectar.show()
+            self.estado_FE = 1
+            for label in self.lista_labels:
+                label.hide()
 
     def actualizar_labels(self):
         y_max = self.label_gris_qrect.y() - 20
