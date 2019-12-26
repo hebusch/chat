@@ -12,6 +12,7 @@ if __name__ == '__main__':
     clienteBE.estado_conexion_signal = clienteFE.estado_conexion_signal
     clienteBE.mensaje_enviado_signal = clienteFE.mensaje_recibido_signal
     clienteFE.mensaje_enviado_signal = clienteBE.mensaje_recibido_signal
+    clienteFE.nickname_enviar_signal = clienteBE.nickname_recibir_signal
 
     clienteFE.show()
 

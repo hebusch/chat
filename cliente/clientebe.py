@@ -7,6 +7,7 @@ class Cliente(PyQt5.QtCore.QObject):
 
     generar_conexion_signal = PyQt5.QtCore.pyqtSignal(str)
     mensaje_recibido_signal = PyQt5.QtCore.pyqtSignal(str)
+    nickname_recibir_signal = PyQt5.QtCore.pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -17,6 +18,10 @@ class Cliente(PyQt5.QtCore.QObject):
     def init_signals(self):
         self.generar_conexion_signal.connect(self.intentar_conexion)
         self.mensaje_recibido_signal.connect(self.enviar_mensaje)
+        self.nickname_recibir_signal.connect(self.nickname_introducido)
+
+    def nickname_introducido(self, nick):
+        self.nickname = nick
 
     def intentar_conexion(self, host):
         self.host = host
@@ -31,6 +36,7 @@ class Cliente(PyQt5.QtCore.QObject):
             self.cerrar_conexion()
 
     def conexion(self):
+        self.server_cliente.send(self.nickname.encode())
         self.estado_conexion_signal.emit(True)
         self.thread = threading.Thread(
             target=self.recibir_mensaje, args=(self.server_cliente,))

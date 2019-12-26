@@ -13,6 +13,7 @@ class Clientefe(Ui_MainWindow):
     tecla_conectar_signal = PyQt5.QtCore.pyqtSignal()
 
     key_event_list = [PyQt5.QtCore.Qt.Key_Return]
+    digitos_prohibidos = ['<', '>']
 
     def __init__(self):
         super().__init__()
@@ -27,6 +28,7 @@ class Clientefe(Ui_MainWindow):
         self.player.setVolume(30)
         self.generar_conexion_signal = None
         self.mensaje_enviado_signal = None
+        self.nickname_enviar_signal = None
         self.lista_labels = []
         self.init_signals()
 
@@ -47,18 +49,35 @@ class Clientefe(Ui_MainWindow):
                 self.tecla_conectar_signal.emit()
 
     def presionar_boton(self):
-        self.ip_introducido = self.line_ip.displayText()
+        self.ip_introducido = self.line_ip.displayText().strip()
+        self.nickname_introducido = self.line_nick.displayText().strip()
 
-        if self.ip_introducido.replace('.', '').isdigit():
-            self.label_coneccion()
-        else:
+        aviso = False
+        if self.nickname_introducido == '':
+            self.nickname_introducido = 'no_nickname!'
+        for digito in self.digitos_prohibidos:
+            if digito in self.nickname_introducido:
+                aviso = True
+        if aviso == True:
             self.label_emergencia.setText(
-                f"<html><head/><body><span style=' font-size:10pt; color:#ffffff;'><p align='center'>Ingrese un IP valido! </br></span></p></body></html>")
+                f"<html><head/><body><span style=' font-size:10pt; color:#ffffff;'><p align='center'>Ingrese un NickName valido!</br></span></p></body></html>"
+            )
             self.label_emergencia.resize(self.label_emergencia.sizeHint())
             self.timer = PyQt5.QtCore.QTimer()
             self.timer.timeout.connect(self.actualizar_emergencia)
             self.timer.setSingleShot(True)
             self.timer.start(1500)
+        else:
+            if self.ip_introducido.replace('.', '').isdigit():
+                self.label_coneccion()
+            else:
+                self.label_emergencia.setText(
+                    f"<html><head/><body><span style=' font-size:10pt; color:#ffffff;'><p align='center'>Ingrese un IP valido! </br></span></p></body></html>")
+                self.label_emergencia.resize(self.label_emergencia.sizeHint())
+                self.timer = PyQt5.QtCore.QTimer()
+                self.timer.timeout.connect(self.actualizar_emergencia)
+                self.timer.setSingleShot(True)
+                self.timer.start(1500)
 
     def actualizar_emergencia(self):
         self.label_emergencia.setText('')
@@ -73,14 +92,20 @@ class Clientefe(Ui_MainWindow):
         self.timer.start(1000)
 
     def generar_conexion(self):
+        self.nickname_enviar_signal.emit(
+            self.nickname_introducido
+        )
         self.generar_conexion_signal.emit(
-            self.ip_introducido)
+            self.ip_introducido
+        )
 
     def estado_conexion(self, estado):
         if estado == True:
             self.boton_conectar.hide()
             self.line_ip.hide()
             self.label_ip.hide()
+            self.label_nick.hide()
+            self.line_nick.hide()
             self.labelAutor.hide()
             self.labelTitulo.hide()
             self.label_emergencia.hide()

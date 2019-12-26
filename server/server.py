@@ -22,15 +22,24 @@ class Servidor:
 
         while True:
             conn, addr = self.servidor.accept()
-            conn.send(
-                "\n<span style='color:#40FF00;'>Bienvenidos al Chat Cifrado!\n".encode('utf-8')
-            )
-            cliente = (conn, addr[1])
-            self.clientes.append(cliente)
+            try:
+                nickname = conn.recv(120).decode()
+                addr1 = addr
+                if nickname == 'no_nickname!':
+                    pass
+                else:
+                    addr = (addr[0], nickname)
+            except:
+                addr = addr1            
             print(f"<Se ha Conectado el usuario {addr[1]}>")
+            conn.send(
+            "\n<span style='color:#40FF00;'>Bienvenidos al Chat Cifrado!\n".encode('utf-8')
+            )
             self.enviar_mensajes(
                 f"<span style='color:#40FF00;'>[Se ha Conectado el usuario {addr[1]}]\n".encode('utf-8'), conn
             )
+            cliente = (conn, addr[1])
+            self.clientes.append(cliente)
             cliente[0].settimeout(300)
             thread = threading.Thread(target=self.clientthread, args=(cliente,))
             thread.daemon = True
