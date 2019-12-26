@@ -1,8 +1,8 @@
 import paths
+import PyQt5.QtGui
 import PyQt5.QtCore
 import PyQt5.QtWidgets
 import PyQt5.QtMultimedia
-from PIL import ImageFont
 from ventana import Ui_MainWindow
 
 
@@ -68,7 +68,7 @@ class Clientefe(Ui_MainWindow):
             "<html><head/><body><span style=' font-size:10pt; color:#40FF00;'><p align='center'>CONECTANDO...</br></span></p></body></html>")
         self.label_emergencia.resize(self.label_emergencia.sizeHint())
         self.timer = PyQt5.QtCore.QTimer()
-        self.t imer.timeout.connect(self.generar_conexion)
+        self.timer.timeout.connect(self.generar_conexion)
         self.timer.setSingleShot(True)
         self.timer.start(1000)
 
@@ -101,16 +101,18 @@ class Clientefe(Ui_MainWindow):
             self.timer.start(1000)
 
     def recibir_mensaje(self, mensaje):
-        self.mensaje_a_mostrar = f"<html><head/><body><span style=' font-size:10pt; color:#ffffff;'>{mensaje}</br></span></body></html>"
-        self.label = PyQt5.QtWidgets.QLabel(self.mensaje_a_mostrar, self)
-        self.label.setGeometry(self.x, self.y, 0, 0)
-        self.label.resize(self.label.sizeHint())
-        if self.label.width() >= 420:
-            pass 
+        mensaje_a_mostrar = f"<html><head/><body><span style=' font-size:10pt; color:#ffffff;'>{mensaje}</br></span></body></html>"
+        label = PyQt5.QtWidgets.QLabel(mensaje_a_mostrar, self)
+        label.setGeometry(self.x, self.y, 0, 0)
+        label.setFixedWidth(430)
+        label.resize(label.sizeHint())
+        if label.width() >= 430:
+            label.setWordWrap(True)
+            label.resize(label.sizeHint())
         self.player.play()
-        self.label.show()
-        self.lista_labels.append(self.label)
-        self.y += self.label.height()
+        label.show()
+        self.lista_labels.append(label)
+        self.y += label.height()
         self.actualizar_labels()
 
     def enviar_mensaje(self):
@@ -120,7 +122,7 @@ class Clientefe(Ui_MainWindow):
 
     def actualizar_labels(self):
         y_max = self.label_gris_qrect.y() - 20
-        y_min = 5
+        y_min = 10
         ultimo_label = self.lista_labels[-1]
         if ultimo_label.pos().y() + ultimo_label.height() > y_max:
             a_subir = ultimo_label.pos().y() + ultimo_label.height() - y_max
@@ -130,11 +132,9 @@ class Clientefe(Ui_MainWindow):
                         label.pos().x(), label.pos().y() - 1
                     )
             primer_label = self.lista_labels[0]
-            if primer_label.pos().y() < y_min:
+            if primer_label.pos().y() + primer_label.height() < y_min:
                 self.lista_labels.remove(primer_label)
-                primer_label.hide() 
-        else:  
+                primer_label.hide()
+            self.y -= a_subir
+        else:
             pass
-    
-    def cortar_label(self, mensaje):
-        pass 
