@@ -100,8 +100,10 @@ class Clientefe(Ui_MainWindow):
             self.timer.setSingleShot(True)
             self.timer.start(1000)
 
-    def recibir_mensaje(self, mensaje):
+    def recibir_mensaje(self, mensaje, prop=False):
         mensaje_a_mostrar = f"<html><head/><body><span style=' font-size:10pt; color:#ffffff;'>{mensaje}</br></span></body></html>"
+        if '[TU]:' in mensaje[:5]:
+            mensaje_a_mostrar = f"<html><head/><body><span style=' font-size:10pt; color:#BDBDBD;'>{mensaje}</br></span></body></html>"
         label = PyQt5.QtWidgets.QLabel(mensaje_a_mostrar, self)
         label.setGeometry(self.x, self.y, 0, 0)
         label.setFixedWidth(430)

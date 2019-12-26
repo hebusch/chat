@@ -1,4 +1,4 @@
-# CHAT CIFRADO :fire:
+# CHAT PRIVADO :fire:
 
 ### Lista de Elementos necesarios para correr:
 * Python 3.X

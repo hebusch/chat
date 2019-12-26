@@ -23,29 +23,33 @@ class Servidor:
         while True:
             conn, addr = self.servidor.accept()
             conn.send(
-                "\n<span style='color:#40FF00;font-style:italic'>Bienvenidos al Chat Cifrado!\n".encode('utf-8'))
-            self.clientes.append((conn, addr[1]))
+                "\n<span style='color:#40FF00;'>Bienvenidos al Chat Cifrado!\n".encode('utf-8')
+            )
+            cliente = (conn, addr[1])
+            self.clientes.append(cliente)
             print(f"<Se ha Conectado el usuario {addr[1]}>")
             self.enviar_mensajes(
-                f"<span style='color:#40FF00;font-style:italic'>SERVER: [Se ha Conectado el usuario {addr[1]}]\n".encode('utf-8'), conn)
-            threading._start_new_thread(self.clientthread, (conn, addr))
+                f"<span style='color:#40FF00;'>[Se ha Conectado el usuario {addr[1]}]\n".encode('utf-8'), conn
+            )
+            cliente[0].settimeout(300)
+            thread = threading.Thread(target=self.clientthread, args=(cliente,))
+            thread.daemon = True
+            thread.start()
 
-    def clientthread(self, conn, addr):
+    def clientthread(self, cliente):
         while True:
             try:
-                mensaje = conn.recv(4096)
+                mensaje = cliente[0].recv(4096)
                 if mensaje:
-                    mensaje_enviar = f"[{addr[1]}]: {mensaje.decode()}"
+                    mensaje_enviar = f"[{cliente[1]}]: {mensaje.decode()}"
                     mensaje_personal = f"[TU]: {mensaje.decode()}"
-                    conn.sendall(mensaje_personal.encode())
-                    self.enviar_mensajes(mensaje_enviar.encode(), conn)
+                    cliente[0].sendall(mensaje_personal.encode())
+                    self.enviar_mensajes(mensaje_enviar.encode(), cliente[0])
                     print(
-                        f"[Mensaje de {addr[1]} a las {time.strftime('%H:%M:%S')}]: {mensaje.decode()}")
-                else:
-                    self.descartar(conn)
-                    break
+                        f"[Mensaje de {cliente[1]} a las {time.strftime('%H:%M:%S')}]: {mensaje.decode()}")
             except:
-                continue
+                self.descartar(cliente)
+                
 
     def enviar_mensajes(self, mensaje, conn):
         for cliente in self.clientes:
@@ -60,10 +64,11 @@ class Servidor:
             self.clientes.remove(cliente)
             cliente[0].shutdown(2)
             cliente[0].close()
-            self.enviar_mensajes(
-                f"<span style='color:#FF0000;font-style:italic'>SERVER: [Se ha Desconectado el usuario {cliente[1]}]\n".encode('utf-8'), None
+            print(
+                f"<Se ha Desconectado el usuario {cliente[1]}>"
             )
-
+            mensaje = f"<span style='color:#FF0000;'>[Se ha Desconectado el usuario {cliente[1]}]"
+            self.enviar_mensajes(mensaje.encode(), cliente[0])
 
 if __name__ == '__main__':
     import requests
