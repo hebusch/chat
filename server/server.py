@@ -6,6 +6,8 @@ import json
 
 class Servidor:
 
+    lista_comandos = ['/help', '/hora', '/usuarios', '/desconectar']
+
     def __init__(self, host):
 
         self.host = host
@@ -51,45 +53,59 @@ class Servidor:
     def clientthread(self, cliente):
         while True:
             try:
-                mensaje = cliente[0].recv(4096)
-                if mensaje:
-                    mensaje_enviar = f"[{cliente[1]}]: {mensaje.decode()}"
-                    mensaje_personal = f"[TU]: {mensaje.decode()}"
-                    cliente[0].sendall(mensaje_personal.encode())
-                    self.enviar_mensajes(mensaje_enviar.encode(), cliente[0])
+                mensaje = cliente[0].recv(4096) 
+                mensaje_enviar = f"[{cliente[1]}]: {mensaje.decode()}"
+                mensaje_personal = f"[TU]: {mensaje.decode()}"
+                cliente[0].sendall(mensaje_personal.encode())
+                self.enviar_mensajes(mensaje_enviar.encode(), cliente[0])
+                print(
+                    f"[Mensaje de {cliente[1]} a las {time.strftime('%H:%M:%S')}]: {mensaje.decode()}")
+                if mensaje.decode() == '/hora':
+                    mensaje_enviar = f"[La hora actual es: {time.strftime('%H:%M:%S')}]"
                     print(
-                        f"[Mensaje de {cliente[1]} a las {time.strftime('%H:%M:%S')}]: {mensaje.decode()}")
-                    if mensaje.decode() == '/hora':
-                        mensaje_enviar = f"[La hora actual es: {time.strftime('%H:%M:%S')}]"
-                        print( 
-                            mensaje_enviar
-                        )
-                        self.enviar_mensajes(
-                            f"<span style='color:#58ACFA;'>{mensaje_enviar}".encode(
-                            ), self.servidor
-                        )
-                    if mensaje.decode() == '/usuarios':
-                        mensaje_enviar = f"[Usuarios Conectados: "
-                        i = 0
-                        for usuario in self.clientes:
-                            if i == 0:
-                                mensaje_enviar = mensaje_enviar + \
-                                    f" {usuario[1]}"
-                                i += 1
-                            else:
-                                mensaje_enviar = mensaje_enviar + \
-                                    f", {usuario[1]}"
-                        mensaje_enviar = mensaje_enviar + "]"
-                        print(
-                            mensaje_enviar
-                        )
-                        self.enviar_mensajes(
-                            f"<span style='color:#58ACFA;'>{mensaje_enviar}".encode(
-                            ), self.servidor
+                        mensaje_enviar
+                    )
+                    self.enviar_mensajes(
+                        f"<span style='color:#58ACFA;'>{mensaje_enviar}".encode(
+                        ), self.servidor
+                    )
+                if mensaje.decode() == '/usuarios':
+                    mensaje_enviar = f"[Usuarios Conectados: "
+                    i = 0
+                    for usuario in self.clientes:
+                        if i == 0:
+                            mensaje_enviar = mensaje_enviar + \
+                                f" {usuario[1]}"
+                            i += 1
+                        else:
+                            mensaje_enviar = mensaje_enviar + \
+                                f", {usuario[1]}"
+                    mensaje_enviar = mensaje_enviar + "]"
+                    print(
+                        mensaje_enviar
+                    )
+                    self.enviar_mensajes(
+                        f"<span style='color:#58ACFA;'>{mensaje_enviar}".encode(
+                        ), self.servidor
 
+                    )
+                if mensaje.decode() == '/help':
+                    mensaje_enviar = '[Comandos disponibles: '
+                    i = 0
+                    for comando in self.lista_comandos:
+                        if i == 0:
+                            mensaje_enviar = mensaje_enviar + f"{comando}"
+                            i += 1
+                        else:
+                            mensaje_enviar = mensaje_enviar + \
+                                f", {comando}"
+                    mensaje_enviar = mensaje_enviar + "]"
+                    cliente[0].sendall(
+                        f"<span style='color:#58ACFA;'>{mensaje_enviar}".encode(
                         )
-                    if mensaje.decode() == '/desconectar':
-                        self.descartar(cliente)
+                    )
+                if mensaje.decode() == '/desconectar':
+                    self.descartar(cliente)
             except:
                 self.descartar(cliente)
 
@@ -112,7 +128,6 @@ class Servidor:
             )
             mensaje = f"<span style='color:#FF0000;'>[Se ha Desconectado el usuario {cliente[1]}]"
             self.enviar_mensajes(mensaje.encode(), cliente[0])
-            threading.Thread(name=cliente[1]).
 
 
 if __name__ == '__main__':
