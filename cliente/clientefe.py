@@ -139,6 +139,10 @@ class Clientefe(Ui_MainWindow):
             label.setGeometry(self.x, self.y, 0, 0)
             label.setFixedWidth(430)
             label.resize(label.sizeHint())
+            if ':smile:' in mensaje:
+                pixmap = PyQt5.QtGui.QPixmap(paths.smile_emoji)
+                label.setPixmap(pixmap)
+                label.setScaledContents(True)
             if label.width() >= 430:
                 label.setWordWrap(True)
                 label.resize(label.sizeHint())
