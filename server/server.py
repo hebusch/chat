@@ -6,7 +6,7 @@ import json
 
 class Servidor:
 
-    lista_comandos = ['/help', '/hora', '/usuarios', '/desconectar']
+    lista_comandos = ['/help', '/hora', '/usuarios', '/desconectar', '/exit']
 
     def __init__(self, host):
 
@@ -53,7 +53,7 @@ class Servidor:
     def clientthread(self, cliente):
         while True:
             try:
-                mensaje = cliente[0].recv(4096) 
+                mensaje = cliente[0].recv(4096)
                 mensaje_enviar = f"[{cliente[1]}]: {mensaje.decode()}"
                 mensaje_personal = f"[TU]: {mensaje.decode()}"
                 cliente[0].sendall(mensaje_personal.encode())
@@ -92,7 +92,7 @@ class Servidor:
 
                 if mensaje.decode() == '/desconectar':
                     self.descartar(cliente)
-                
+
                 if mensaje.decode() == '/info':
                     mensaje_enviar = self.info()
                     print(
@@ -154,7 +154,7 @@ class Servidor:
     def hora(self):
         mensaje_enviar = f"[La hora actual es: {time.strftime('%H:%M:%S')}]"
         return mensaje_enviar
-    
+
     def info(self):
         mensaje_enviar = f"[Estas conectado en el Servidor: {self.host}]\nHay {len(self.clientes)} usuarios conectados."
         return mensaje_enviar
