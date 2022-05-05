@@ -1,3 +1,3 @@
-# CHAT PRIVADO :fire:
+# CHAT
 
-Desarrollado por hobby por Heinz Busch 😄
+Desarrollado por hobby😄
